@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "913552017599",
+    "firebase_url": "https://ungmall.firebaseio.com",
+    "project_id": "ungmall",
+    "storage_bucket": "ungmall.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913552017599:android:3fa870361077d7c0755e0a",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.ungmall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913552017599-a6h3mdf9v221ic54e1ndhnuc3l35p20e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk9AECJPr-5jDg7GnYtgoAdUl49b9MCo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913552017599-a6h3mdf9v221ic54e1ndhnuc3l35p20e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

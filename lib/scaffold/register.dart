@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ungmall/utility/my_style.dart';
 
@@ -82,8 +83,22 @@ class _RegisterState extends State<Register> {
       onPressed: () {
         formKey.currentState.save();
         print('name = $name, email = $email, password = $password');
+        registerThread();
       },
     );
+  }
+
+  Future<void> registerThread() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((response) {
+      print('Register Success');
+    }).catchError((response) {
+      String title = response.code;
+      String message = response.message;
+      print('title = $title, message = $message');
+    });
   }
 
   @override
