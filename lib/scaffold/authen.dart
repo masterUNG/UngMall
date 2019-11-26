@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ungmall/scaffold/my_service.dart';
 import 'package:ungmall/scaffold/register.dart';
 import 'package:ungmall/utility/my_style.dart';
+import 'package:ungmall/utility/normal_dialog.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -9,6 +12,8 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
   // Field
+  String user, password;
+  final formKey = GlobalKey<FormState>();
 
   // Method
   Widget signInButton() {
@@ -19,9 +24,33 @@ class _AuthenState extends State<Authen> {
           'Sign In',
           style: TextStyle(color: Colors.white),
         ),
-        onPressed: () {},
+        onPressed: () {
+          formKey.currentState.save();
+          print('user = $user, password = $password');
+          checkAuthen();
+        },
       ),
     );
+  }
+
+  Future<void> checkAuthen() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth
+        .signInWithEmailAndPassword(email: user, password: password)
+        .then((response) {
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext buildContext) {
+        return MyService();
+      });
+      Navigator.of(context).pushAndRemoveUntil(materialPageRoute,
+          (Route<dynamic> route) {
+        return false;
+      });
+    }).catchError((response) {
+      String title = response.code;
+      String message = response.message;
+      normalDialog(context, title, message);
+    });
   }
 
   Widget signUpButton() {
@@ -34,9 +63,11 @@ class _AuthenState extends State<Authen> {
         onPressed: () {
           print('You Click');
 
-          MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext buildContext){return Register();});
+          MaterialPageRoute materialPageRoute =
+              MaterialPageRoute(builder: (BuildContext buildContext) {
+            return Register();
+          });
           Navigator.of(context).push(materialPageRoute);
-
         },
       ),
     );
@@ -62,8 +93,15 @@ class _AuthenState extends State<Authen> {
   Widget userForm() {
     return Container(
       width: 250.0,
-      child: TextFormField(
-        decoration: InputDecoration(labelText: 'User :'),
+      child: TextFormField(initialValue: 'master@abc.com',
+        keyboardType: TextInputType.emailAddress,
+        onSaved: (String string) {
+          user = string.trim();
+        },
+        decoration: InputDecoration(
+          labelText: 'User :',
+          labelStyle: TextStyle(color: MyStyle().textColor),
+        ),
       ),
     );
   }
@@ -71,9 +109,15 @@ class _AuthenState extends State<Authen> {
   Widget passwordForm() {
     return Container(
       width: 250.0,
-      child: TextFormField(
+      child: TextFormField(initialValue: '123456',
+        onSaved: (String string) {
+          password = string.trim();
+        },
         obscureText: true,
-        decoration: InputDecoration(labelText: 'Password :'),
+        decoration: InputDecoration(
+          labelText: 'Password :',
+          labelStyle: TextStyle(color: MyStyle().textColor),
+        ),
       ),
     );
   }
@@ -112,23 +156,27 @@ class _AuthenState extends State<Authen> {
           ),
           child: Center(
             child: SingleChildScrollView(
-                          child: Container(
+              child: Container(
                 padding: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
                   color: Color.fromARGB(180, 255, 255, 255),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    showLogo(),
-                    showAppName(),
-                    userForm(),
-                    passwordForm(),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    showButton(),
-                  ],
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      showLogo(),
+                      showAppName(),
+                      userForm(),
+                      passwordForm(),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      showButton(),
+                    ],
+                  ),
                 ),
               ),
             ),
